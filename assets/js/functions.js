@@ -2,7 +2,7 @@ const URL = 'http://localhost:3000'
 const modal = document.querySelector('[data-open-modal="myModal"]')
 
 function renderPost () {
-  fetch(`${URL}/posts`)
+  return fetch(`${URL}/posts`)
     .then(response => response.json())
     .then(data => {
       data.forEach(post => {
@@ -27,29 +27,12 @@ function renderPost () {
   })
 }
 
-  document.getElementById('postFeed').addEventListener('click', (e) => {
-    let target = e.target
-    let targetId = target.dataset.id
-    // let post = getPost(targetId)
-    // document.getElementById('modalTitle').innerHTML = target.
-    // getPost(targetId)
-    console.log(getPost(targetId));
-    
-  })
+document.getElementById('postFeed').addEventListener('click', async (e) => {
+  let target = e.target
+  let targetId = target.dataset.id
+  let post = await fetch(`${URL}/posts/${targetId}`)
+  .then(response => response.json())
+  console.log(post);
+})
 
-  function getPost(id) {
-    let postContent = {}
-    fetch(`${URL}/posts`)
-    .then(response => response.json())
-    .then(data => {
-      data.forEach(post => {
-        if(id == post.id) {
-          postContent = post
-        }
-      })
-    })
-    console.log(postContent);
-    return postContent
-  }
-
-  renderPost()
+renderPost()
