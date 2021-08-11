@@ -20,7 +20,7 @@ function renderPost () {
                 data-id="${post.id}"
                 >Go somewhere</a
               >
-              <button id="editPost">Edit</button>
+              <button id="editPost" data-edit="${post.id}" data-bs-toggle="modal" data-bs-target="#exampleModal2">Edit</button>
               <button id="deletePost" data-delete="${post.id}">Delete</button>
             </div>
           </div>
@@ -33,6 +33,8 @@ function renderPost () {
 document.getElementById('postFeed').addEventListener('click', async (e) => {
   let targetId = e.target.dataset.id
   let targetDelete = e.target.dataset.delete
+  let targetEdit = e.target.dataset.edit
+
   if (targetId) {
     let comments = []
     let post = await fetch(`${URL}/posts/${targetId}`).then(response => response.json())
@@ -72,12 +74,16 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
     document.getElementById('myModal').innerHTML = modalHTML
     document.getElementById('loadComments').addEventListener('click', () => loadComments(comments))
   }
+
   if (targetDelete) {
     await fetch(`${URL}/posts/${targetDelete}`, {method: 'DELETE'})
       .then(response => response.json())
       renderPost()
   }
 
+  if(targetEdit) {
+    setForm(targetEdit)
+  }
 })
 
 function loadComments (comments) {
@@ -92,6 +98,41 @@ function loadComments (comments) {
     `
     commentsContainer.innerHTML += commentHTML
   })
+}
+
+async function setForm(postId) {
+  let post = await fetch(`${URL}/posts/${postId}`).then(response => response.json())
+  let formHTML = `
+    <form id="formEdit">
+      <div class="form-group">
+        <label for="titleName" class="col-form-label">Title:</label>
+        <input type="text" class="form-control" id="titleName" name="titleName" value="${post.title}">
+      </div>
+      <div class="form-group">
+        <label for="bodyName" class="col-form-label">Body:</label>
+        <textarea type="text" class="form-control" id="bodyName" name="bodyName" cols="30" rows="10" value="${post.body}">${post.body}</textarea>
+      </div>
+      <button type="button" id="editPostBtn" class="btn btn-primary">Edit</button>
+    </form>
+  `
+
+  document.getElementById('modalFormBody').innerHTML = formHTML
+  document.getElementById('editPostBtn').addEventListener('click', () => editPost(postId))
+}
+
+ function editPost(id) {
+  let titlePost = document.getElementById('titleName').value
+  let bodyPost = document.getElementById('bodyName').value
+
+   fetch(`${URL}/posts/${id}`, {
+    method: 'PATCH',
+    headers: {"Content-type": "application/json"},
+    body: JSON.stringify({
+      title: `${titlePost}`,
+      body: `${bodyPost}`
+    })})
+    .then(response => response.json())
+    .then(alert(`Post updated: ${titlePost}`))
 }
 
 renderPost()
