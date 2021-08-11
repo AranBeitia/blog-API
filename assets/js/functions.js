@@ -8,21 +8,26 @@ function renderPost () {
     .then(data => {
       data.forEach(post => {
         cardHTML = `
-          <div class="col-4">
+          <div class="col-12 col-sm-6 col-md-4">
             <div class="card h-100">
+              <img src="https://picsum.photos/600/300?random=${post.id}" class="card-img-top" alt="Post image">
               <div class="card-body">
-                <h5 class="card-title">${post.title}</h5>
-                <p class="card-text">${post.body}</p>
-                <a
-                  href="#"
-                  class="btn btn-dark"
-                  data-bs-toggle="modal"
-                  data-bs-target="#modalTemplate"
-                  data-id="${post.id}"
-                  >Go somewhere</a
-                >
-                <button id="editPost" class="btn btn-success" data-edit="${post.id}" data-bs-toggle="modal" data-bs-target="#exampleModal2">Edit</button>
-                <button id="deletePost" class="btn btn-danger" data-delete="${post.id}">Delete</button>
+                <h5 class="card-title capitalize-text">${post.title}</h5>
+                <p class="card-text capitalize-text">${post.body}</p>
+                <div class="d-flex justify-content-between">
+                  <a
+                    href="#"
+                    class="btn btn-dark"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalTemplate"
+                    data-id="${post.id}"
+                    >Read more</a
+                  >
+                  <div>
+                    <button id="editPost" class="btn btn-success icon-pencil" data-edit="${post.id}" data-bs-toggle="modal" data-bs-target="#exampleModal2"></button>
+                    <button id="deletePost" class="btn btn-danger icon-bin" data-delete="${post.id}"></button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -51,7 +56,7 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
 
     let modalHTML = `
     <div class="modal-header">
-      <h2 class="modal-title" id="modalTitle">${post.title}</h2>
+      <h2 class="modal-title capitalize-text" id="modalTitle">${post.title}</h2>
       <button
         type="button"
         class="btn-close"
@@ -60,7 +65,7 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
       ></button>
     </div>
     <div id="modalBody" class="modal-body">
-      <p>${post.body}</p>
+      <p class="capitalize-text">${post.body}</p>
       <h3>User</h3>
       <img src="${user.photo}" alt="Profile picture of ${user.name}" class="w-25 rounded-circle">
       <p>${user.name}</p>
@@ -95,9 +100,11 @@ function loadComments (comments) {
   commentsContainer.innerHTML = '<h3>comments</h3>'
   comments.forEach(comment => {
     commentHTML = `
-      <p style="color: red">${comment.name}</p>
-      <p style="color: blue">${comment.body}</p>
-      <p style="color: pink">${comment.email}</p>
+      <div class="border-bottom mb-3 pb-3">
+        <h4 class="capitalize-text">${comment.name}</h4>
+        <p class="capitalize-text">${comment.body}</p>
+        <p>Contact email: <a href="mailto:${comment.email}">${comment.email}</a></p>
+      </div>
     `
     commentsContainer.innerHTML += commentHTML
   })
@@ -109,11 +116,11 @@ async function setForm(postId) {
     <form id="formEdit">
       <div class="form-group">
         <label for="titleName" class="col-form-label">Title:</label>
-        <input type="text" class="form-control" id="titleName" name="titleName" value="${post.title}">
+        <input type="text" class="form-control capitalize-text" id="titleName" name="titleName" value="${post.title}">
       </div>
       <div class="form-group">
         <label for="bodyName" class="col-form-label">Body:</label>
-        <textarea type="text" class="form-control" id="bodyName" name="bodyName" cols="30" rows="10" value="${post.body}">${post.body}</textarea>
+        <textarea type="text" class="form-control capitalize-text" id="bodyName" name="bodyName" cols="30" rows="10" value="${post.body}">${post.body}</textarea>
       </div>
       <button type="button" id="editPostBtn" class="btn btn-primary">Edit</button>
     </form>
