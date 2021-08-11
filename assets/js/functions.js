@@ -20,7 +20,7 @@ function renderPost () {
                 data-id="${post.id}"
                 >Go somewhere</a
               >
-              <button id="editPost">Edit</button>
+              <button id="editPost" data-edit="${post.id}" data-bs-toggle="modal" data-bs-target="#exampleModal2">Edit</button>
               <button id="deletePost" data-delete="${post.id}">Delete</button>
             </div>
           </div>
@@ -33,6 +33,8 @@ function renderPost () {
 document.getElementById('postFeed').addEventListener('click', async (e) => {
   let targetId = e.target.dataset.id
   let targetDelete = e.target.dataset.delete
+  let targetEdit = e.target.dataset.edit
+
   if (targetId) {
     let comments = []
     let post = await fetch(`${URL}/posts/${targetId}`).then(response => response.json())
@@ -72,12 +74,23 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
     document.getElementById('myModal').innerHTML = modalHTML
     document.getElementById('loadComments').addEventListener('click', () => loadComments(comments))
   }
+
   if (targetDelete) {
     await fetch(`${URL}/posts/${targetDelete}`, {method: 'DELETE'})
       .then(response => response.json())
       renderPost()
   }
 
+  if(targetEdit) {
+    // await fetch(`${URL}/posts/${targetEdit}`, {
+    //   method: 'PATCH',
+    //   body: JSON.stringify({
+    //     title: '',
+    //     body: ''
+    //   })
+    // })
+    setForm(targetEdit)
+  }
 })
 
 function loadComments (comments) {
@@ -92,6 +105,18 @@ function loadComments (comments) {
     `
     commentsContainer.innerHTML += commentHTML
   })
+}
+
+async function setForm(postId) {
+  let post = await fetch(`${URL}/posts/${postId}`).then(response => response.json())
+  let form = document.getElementById('formEdit')
+  // let newForm = new FormData(form)
+  // console.log(newForm);
+  // newForm.set('titleName', 'holaa')
+
+  let titleForm = document.getElementById('bodyName').value
+  titleForm = post.title
+  console.log(titleForm);
 }
 
 renderPost()
