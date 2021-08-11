@@ -9,7 +9,7 @@ function renderPost () {
       data.forEach(post => {
         cardHTML = `
           <div class="col-4">
-            <div class="card">
+            <div class="card h-100">
               <div class="card-body">
                 <h5 class="card-title">${post.title}</h5>
                 <p class="card-text">${post.body}</p>
