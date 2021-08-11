@@ -61,7 +61,8 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
     </div>
     <div id="modalBody" class="modal-body">
       <p>${post.body}</p>
-      <h3>user</h3>
+      <h3>User</h3>
+      <img src="${user.photo}" alt="Profile picture of ${user.name}" class="w-25 rounded-circle">
       <p>${user.name}</p>
       <a href="mailto:${user.email}">${user.email}</a>
       <div id="commentsContainer">
