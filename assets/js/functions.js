@@ -82,13 +82,6 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
   }
 
   if(targetEdit) {
-    // await fetch(`${URL}/posts/${targetEdit}`, {
-    //   method: 'PATCH',
-    //   body: JSON.stringify({
-    //     title: '',
-    //     body: ''
-    //   })
-    // })
     setForm(targetEdit)
   }
 })
@@ -109,14 +102,37 @@ function loadComments (comments) {
 
 async function setForm(postId) {
   let post = await fetch(`${URL}/posts/${postId}`).then(response => response.json())
-  let form = document.getElementById('formEdit')
-  // let newForm = new FormData(form)
-  // console.log(newForm);
-  // newForm.set('titleName', 'holaa')
+  let formHTML = `
+    <form id="formEdit">
+      <div class="form-group">
+        <label for="titleName" class="col-form-label">Title:</label>
+        <input type="text" class="form-control" id="titleName" name="titleName" value="${post.title}">
+      </div>
+      <div class="form-group">
+        <label for="bodyName" class="col-form-label">Body:</label>
+        <textarea type="text" class="form-control" id="bodyName" name="bodyName" cols="30" rows="10" value="${post.body}">${post.body}</textarea>
+      </div>
+      <button type="button" id="editPostBtn" class="btn btn-primary">Edit</button>
+    </form>
+  `
 
-  let titleForm = document.getElementById('bodyName').value
-  titleForm = post.title
-  console.log(titleForm);
+  document.getElementById('modalFormBody').innerHTML = formHTML
+  document.getElementById('editPostBtn').addEventListener('click', () => editPost(postId))
+}
+
+ function editPost(id) {
+  let titlePost = document.getElementById('titleName').value
+  let bodyPost = document.getElementById('bodyName').value
+
+   fetch(`${URL}/posts/${id}`, {
+    method: 'PATCH',
+    headers: {"Content-type": "application/json"},
+    body: JSON.stringify({
+      title: `${titlePost}`,
+      body: `${bodyPost}`
+    })})
+    .then(response => response.json())
+    .then(alert(`Post updated: ${titlePost}`))
 }
 
 renderPost()
