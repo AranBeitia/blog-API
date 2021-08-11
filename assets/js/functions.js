@@ -8,20 +8,22 @@ function renderPost () {
     .then(data => {
       data.forEach(post => {
         cardHTML = `
-          <div class="card col-4">
-            <div class="card-body">
-              <h5 class="card-title">${post.title}</h5>
-              <p class="card-text">${post.body}</p>
-              <a
-                href="#"
-                class="btn btn-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#modalTemplate"
-                data-id="${post.id}"
-                >Go somewhere</a
-              >
-              <button id="editPost" data-edit="${post.id}" data-bs-toggle="modal" data-bs-target="#exampleModal2">Edit</button>
-              <button id="deletePost" data-delete="${post.id}">Delete</button>
+          <div class="col-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">${post.title}</h5>
+                <p class="card-text">${post.body}</p>
+                <a
+                  href="#"
+                  class="btn btn-dark"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalTemplate"
+                  data-id="${post.id}"
+                  >Go somewhere</a
+                >
+                <button id="editPost" class="btn btn-success" data-edit="${post.id}" data-bs-toggle="modal" data-bs-target="#exampleModal2">Edit</button>
+                <button id="deletePost" class="btn btn-danger" data-delete="${post.id}">Delete</button>
+              </div>
             </div>
           </div>
         `
