@@ -10,11 +10,11 @@ function renderPost () {
         cardHTML = `
           <div class="col-12 col-sm-6 col-md-4">
             <div class="card h-100">
-              <img src="https://picsum.photos/600/300?random=${post.id}" class="card-img-top" alt="Post image">
-              <div class="card-body">
+              <img src="https://picsum.photos/600/200?random=${post.id}" class="card-img-top" alt="Post image">
+              <div class="card-body d-flex flex-wrap">
                 <h5 class="card-title capitalize-text">${post.title}</h5>
-                <p class="card-text capitalize-text">${post.body}</p>
-                <div class="d-flex justify-content-between">
+                <p class="card-text capitalize-text text-truncate">${post.body}</p>
+                <div class="d-flex justify-content-between align-items-center align-self-end w-100">
                   <a
                     href="#"
                     class="btn btn-dark"
