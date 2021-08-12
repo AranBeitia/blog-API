@@ -1,6 +1,13 @@
+/* IMPORTS */
+
+
+
+/* GLOBAL VARIABLES */
+
 const URL = 'http://localhost:3000'
-const modal = document.querySelector('[data-open-modal="myModal"]')
 const postFeed = document.getElementById('postFeed')
+
+/* FUNCTIONALITIES */
 
 function renderPost (start, limit) {
   let cardHTML = ''
@@ -38,96 +45,74 @@ function renderPost (start, limit) {
   })
 }
 
+/* SINGLE EVENT LISTENER ON CLICK IN ALL POST FEED ELEMENT */
+
 postFeed.addEventListener('click', async (e) => {
   let targetId = e.target.dataset.id
   let targetDelete = e.target.dataset.delete
   let targetEdit = e.target.dataset.edit
 
   if (targetId) {
-    let comments = []
-    let post = await fetch(`${URL}/posts/${targetId}`).then(response => response.json())
-    let user = await fetch(`${URL}/users/${post.userId}`).then(response => response.json())
-    await fetch(`${URL}/comments/`).then(response => response.json()).then(data => {
-      data.forEach(comment => {
-        if(targetId == comment.postId) {
-          comments.push(comment)
-        }
-      })
-    })
-
-    let modalHTML = `
-    <div class="modal-header align-items-start">
-      <h2 class="modal-title capitalize-text lh-sm" id="modalTitle">${post.title}</h2>
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="modal"
-        aria-label="Close"
-      ></button>
-    </div>
-    <img src="https://picsum.photos/id/${post.id+50}/600/200" alt="Post image" onerror="this.src='https://picsum.photos/id/1/600/200'" class="card-img-top">
-    <div id="modalBody" class="modal-body">
-      <p class="capitalize-text">${post.body}</p>
-      <div class="d-flex justify-content-center mx-1 my-2">
-        <img src="${user.photo}" alt="Profile picture of ${user.name}" class="w-25 rounded-circle me-4">
-        <div class="d-flex flex-column">
-          <h3 class="pb-3">Author</h3>
-          <p>${user.name}</p>
-          <a href="mailto:${user.email}">${user.email}</a>
-        </div>
-      </div>
-      <div class="accordion accordion-flush" id="loadComments">
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="flush-headingOne">
-          <button id="commentsBtn" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-          Show comments
-          </button>
-          </h2>
-          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#loadComments">
-          <div id="commentsContainer" class="accordion-body"></div>
-        </div>
-      </div>
-    </div>
-
-    `
-    document.getElementById('myModal').innerHTML = modalHTML
-    document.getElementById('loadComments').addEventListener('click', () => loadComments(comments))
-  }
-
-  if (targetDelete) {
-    await fetch(`${URL}/posts/${targetDelete}`, {method: 'DELETE'})
-      .then(response => response.json())
-    let lastId = document.querySelectorAll('[data-id]').length
-    postFeed.innerHTML = ''
-    renderPost(0, lastId)
-    triggerToast('liveToastDelete')
-  }
-
-  if(targetEdit) {
+    displayPostModal(targetId)
+  } else if (targetDelete) {
+    deletePost(targetDelete)
+  } else if (targetEdit) {
     setForm(targetEdit)
   }
 })
 
-function loadComments (comments) {
-  let button = document.getElementById('commentsBtn')
-  if (button.getAttribute('aria-expanded') === "true") {
-    button.innerHTML = "Hide comments"
-  } else {
-    button.innerHTML = "Show comments"
-  }
-  let commentHTML = ''
-  let commentsContainer = document.getElementById('commentsContainer')
-  commentsContainer.innerHTML = '<h3 class="py-3">Comments</h3>'
-  comments.forEach(comment => {
-    commentHTML = `
-      <div class="border-bottom mb-3 pb-3">
-        <h4 class="capitalize-text">${comment.name}</h4>
-        <p class="capitalize-text">${comment.body}</p>
-        <p>Contact email: <a href="mailto:${comment.email}">${comment.email}</a></p>
+/* FUNCTIONALITIES OF DISPLAY MODAL, DELETE POST, AND SET FORM FOR EDIT POST */
+
+async function displayPostModal(targetId) {
+  let post = await fetch(`${URL}/posts/${targetId}`).then(response => response.json())
+  let user = await fetch(`${URL}/users/${post.userId}`).then(response => response.json())
+  let comments = await fetch(`${URL}/posts/${targetId}/comments`).then(response => response.json())
+
+  let modalHTML = `
+  <div class="modal-header align-items-start">
+    <h2 class="modal-title capitalize-text lh-sm" id="modalTitle">${post.title}</h2>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="modal"
+      aria-label="Close"
+    ></button>
+  </div>
+  <img src="https://picsum.photos/id/${post.id+50}/600/200" alt="Post image" onerror="this.src='https://picsum.photos/id/1/600/200'" class="card-img-top">
+  <div id="modalBody" class="modal-body">
+    <p class="capitalize-text">${post.body}</p>
+    <div class="d-flex justify-content-center mx-1 my-2">
+      <img src="${user.photo}" alt="Profile picture of ${user.name}" class="w-25 rounded-circle me-4">
+      <div class="d-flex flex-column">
+        <h3 class="pb-3">Author</h3>
+        <p>${user.name}</p>
+        <a href="mailto:${user.email}">${user.email}</a>
       </div>
-    `
-    commentsContainer.innerHTML += commentHTML
-  })
+    </div>
+    <div class="accordion accordion-flush" id="loadComments">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingOne">
+        <button id="commentsBtn" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+        Show comments
+        </button>
+        </h2>
+        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#loadComments">
+        <div id="commentsContainer" class="accordion-body"></div>
+      </div>
+    </div>
+  </div>
+  `
+  document.getElementById('myModal').innerHTML = modalHTML
+  document.getElementById('loadComments').addEventListener('click', () => loadComments(comments))
+}
+
+async function deletePost(targetDelete) {
+  await fetch(`${URL}/posts/${targetDelete}`, {method: 'DELETE'})
+  .then(response => response.json())
+  let lastId = document.querySelectorAll('[data-id]').length
+  postFeed.innerHTML = ''
+  renderPost(0, lastId)
+  triggerToast('liveToastDelete')
 }
 
 async function setForm(postId) {
@@ -150,9 +135,32 @@ async function setForm(postId) {
   document.getElementById('editPostBtn').addEventListener('click', () => editPost(postId))
 }
 
+
+function loadComments (comments) {
+  const button = document.getElementById('commentsBtn')
+  if (button.getAttribute('aria-expanded') === "true") {
+    button.innerHTML = "Hide comments"
+  } else {
+    button.innerHTML = "Show comments"
+  }
+  let commentHTML = ''
+  const commentsContainer = document.getElementById('commentsContainer')
+  commentsContainer.innerHTML = '<h3 class="py-3">Comments</h3>'
+  comments.forEach(comment => {
+    commentHTML = `
+      <div class="border-bottom mb-3 pb-3">
+        <h4 class="capitalize-text">${comment.name}</h4>
+        <p class="capitalize-text">${comment.body}</p>
+        <p>Contact email: <a href="mailto:${comment.email}">${comment.email}</a></p>
+      </div>
+    `
+    commentsContainer.innerHTML += commentHTML
+  })
+}
+
 function editPost(id) {
-  let titlePost = document.getElementById('titleName').value
-  let bodyPost = document.getElementById('bodyName').value
+  const titlePost = document.getElementById('titleName').value
+  const bodyPost = document.getElementById('bodyName').value
 
   fetch(`${URL}/posts/${id}`, {
     method: 'PATCH',
@@ -163,6 +171,9 @@ function editPost(id) {
     })})
     .then(response => response.json())
     .then(triggerToast('liveToast'))
+  let lastId = document.querySelectorAll('[data-id]').length
+  postFeed.innerHTML = ''
+  renderPost(0, lastId)
 }
 
 async function loadOnScroll() {
@@ -178,7 +189,7 @@ async function loadOnScroll() {
 }
 
 function triggerToast(toast) {
-  let toastLive = document.getElementById(toast)
+  const toastLive = document.getElementById(toast)
   let toastElement = new bootstrap.Toast(toastLive)
   toastElement.show()
 }
@@ -186,7 +197,7 @@ function triggerToast(toast) {
 async function search (e) {
   e.preventDefault();
 
-  let searchValue = document.getElementById('searchValue').value
+  const searchValue = document.getElementById('searchValue').value
   window.removeEventListener("scroll", loadOnScroll)
   if(searchValue === '') {
     postFeed.innerHTML = ''
