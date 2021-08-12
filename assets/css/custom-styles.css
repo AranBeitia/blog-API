@@ -5,3 +5,11 @@
 .capitalize-text::first-letter {
   text-transform: capitalize;
 }
+
+.z-index-1 {
+  z-index: 1;
+}
+
+.margin-top {
+  margin-top: 300px;
+}

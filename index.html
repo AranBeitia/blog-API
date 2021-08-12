@@ -22,7 +22,7 @@
 		<title>API blog</title>
 	</head>
 	<body>
-		<header>
+		<header class="position-fixed top-0 start-0 end-0 z-index-1">
 			<nav class="navbar navbar-light bg-light">
 				<div class="container-fluid d-flex">
 					<a class="navbar-brand" href="/">
@@ -46,9 +46,6 @@
 					</form>
 				</div>
 			</nav>
-		</header>
-
-		<main>
 			<section
 				id="carouselExampleCaptions"
 				class="carousel slide"
@@ -136,13 +133,10 @@
 					<span class="visually-hidden">Next</span>
 				</button>
 			</section>
-
-			<section class="container my-4">
-				<div id="postFeed" class="row justify-content-start gy-3"></div>
-			</section>
+		</header>
+		<main class="container margin-top">
+			<section id="postFeed" class="row justify-content-start gy-3"></section>
 		</main>
-
-
 
 		<!-- Modal post-->
 		<article>
