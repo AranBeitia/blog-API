@@ -188,5 +188,51 @@ function triggerDeleteToast () {
   toast.show()
 }
 
+async function search (e) {
+  e.preventDefault();
+
+  let searchValue = document.getElementById('searchValue').value
+  window.removeEventListener("scroll", loadOnScroll)
+  if(searchValue === '') {
+    document.getElementById('postFeed').innerHTML = ''
+  } else {
+    document.getElementById('postFeed').innerHTML = ''
+    await fetch(`${URL}/posts?q=${searchValue}`)
+    .then(response => response.json())
+    .then(data => {
+      data.forEach(post => {
+        cardHTML = `
+          <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100">
+              <img src="https://picsum.photos/id/${post.id}/600/200" alt="Post image" onerror="this.src='https://picsum.photos/id/1/600/200'" class="card-img-top">
+              <div class="card-body d-flex flex-wrap">
+                <h5 class="card-title capitalize-text">${post.title}</h5>
+                <p class="card-text capitalize-text text-truncate">${post.body}</p>
+                <div class="d-flex justify-content-between align-items-center align-self-end w-100">
+                  <a
+                    href="#"
+                    class="btn btn-dark"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalTemplate"
+                    data-id="${post.id}"
+                    >Read more</a
+                  >
+                  <div>
+                    <button id="editPost" class="btn btn-success icon-pencil" data-edit="${post.id}" data-bs-toggle="modal" data-bs-target="#exampleModal2"></button>
+                    <button id="deletePost" class="btn btn-danger icon-bin" data-delete="${post.id}"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      document.getElementById('postFeed').innerHTML += cardHTML
+      })
+    })
+  }
+}
+
 renderPost(0, 9)
 window.addEventListener("scroll", loadOnScroll)
+document.getElementById('searchButton')
+.addEventListener('click', search)
