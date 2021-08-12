@@ -147,4 +147,18 @@ function editPost(id) {
     .then(alert(`Post updated: ${titlePost}`))
 }
 
-renderPost(0, 29)
+async function loadOnScroll() {
+  let scrollTop = document.documentElement.scrollTop
+  let scrollHeight = document.documentElement.scrollHeight
+  let clientHeight = document.documentElement.clientHeight
+  
+  let postLength = (await fetch(`${URL}/posts/`).then(response => response.json())).length
+  let lastId = document.querySelectorAll('[data-id]').length
+
+  if (scrollTop + clientHeight >= scrollHeight && lastId < postLength) {
+    renderPost(lastId, 6)
+  }
+}
+
+renderPost(0, 9)
+window.addEventListener("scroll", loadOnScroll)
