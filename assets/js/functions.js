@@ -1,9 +1,9 @@
 const URL = 'http://localhost:3000'
 const modal = document.querySelector('[data-open-modal="myModal"]')
 
-function renderPost () {
+function renderPost (start, limit) {
   let cardHTML = ''
-  return fetch(`${URL}/posts`)
+  return fetch(`${URL}/posts?_start=${start}&_limit=${limit}`)
     .then(response => response.json())
     .then(data => {
       data.forEach(post => {
@@ -86,7 +86,9 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
   if (targetDelete) {
     await fetch(`${URL}/posts/${targetDelete}`, {method: 'DELETE'})
       .then(response => response.json())
-      renderPost()
+    let lastId = document.querySelectorAll('[data-id]').length
+    document.getElementById('postFeed').innerHTML = ''
+    renderPost(0, lastId)
   }
 
   if(targetEdit) {
@@ -130,11 +132,11 @@ async function setForm(postId) {
   document.getElementById('editPostBtn').addEventListener('click', () => editPost(postId))
 }
 
- function editPost(id) {
+function editPost(id) {
   let titlePost = document.getElementById('titleName').value
   let bodyPost = document.getElementById('bodyName').value
 
-   fetch(`${URL}/posts/${id}`, {
+  fetch(`${URL}/posts/${id}`, {
     method: 'PATCH',
     headers: {"Content-type": "application/json"},
     body: JSON.stringify({
@@ -145,4 +147,4 @@ async function setForm(postId) {
     .then(alert(`Post updated: ${titlePost}`))
 }
 
-renderPost()
+renderPost(0, 29)
