@@ -35,12 +35,13 @@
 					</a>
 					<form class="d-flex">
 						<input
+							id="searchValue"
 							class="form-control me-2"
 							type="search"
 							placeholder="Search"
 							aria-label="Search"
 						/>
-						<button class="btn btn-outline-dark" type="submit">
+						<button id="searchButton" class="btn btn-outline-dark">
 							Search
 						</button>
 					</form>
@@ -102,6 +103,21 @@
 				</div>
 			</div>
 		</article>
-
+		<aside class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+			<div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+				<div class="d-flex">
+					<div class="toast-body">Your post has been edited succesfully</div>
+					<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+				</div>
+			</div>
+		</aside>
+		<aside class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+			<div id="liveToastDelete" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+				<div class="d-flex">
+					<div class="toast-body">Your post has been deleted succesfully</div>
+					<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+				</div>
+			</div>
+		</aside>
 	</body>
 </html>
