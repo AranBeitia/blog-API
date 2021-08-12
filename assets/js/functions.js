@@ -10,7 +10,7 @@ function renderPost (start, limit) {
         cardHTML = `
           <div class="col-12 col-sm-6 col-md-4">
             <div class="card h-100">
-              <img src="https://picsum.photos/600/200?random=${post.id}" class="card-img-top" alt="Post image">
+              <img src="https://picsum.photos/id/${post.id}/600/200" alt="Post image" onerror="this.src='https://picsum.photos/id/1/600/200'" class="card-img-top">
               <div class="card-body d-flex flex-wrap">
                 <h5 class="card-title capitalize-text">${post.title}</h5>
                 <p class="card-text capitalize-text text-truncate">${post.body}</p>
@@ -55,22 +55,27 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
     })
 
     let modalHTML = `
-    <div class="modal-header">
-      <h2 class="modal-title capitalize-text" id="modalTitle">${post.title}</h2>
+    <div class="modal-header align-items-start">
+      <h2 class="modal-title capitalize-text lh-sm" id="modalTitle">${post.title}</h2>
       <button
         type="button"
         class="btn-close"
         data-bs-dismiss="modal"
         aria-label="Close"
       ></button>
-    </div>
+      </div>
+      <img src="https://picsum.photos/id/${post.id}/600/200" alt="Post image" onerror="this.src='https://picsum.photos/id/1/600/200'" class="card-img-top">
     <div id="modalBody" class="modal-body">
       <p class="capitalize-text">${post.body}</p>
-      <h3>User</h3>
-      <img src="${user.photo}" alt="Profile picture of ${user.name}" class="w-25 rounded-circle">
-      <p>${user.name}</p>
-      <a href="mailto:${user.email}">${user.email}</a>
-      <div id="commentsContainer">
+      <div class="d-flex justify-content-center mx-1 my-2">
+        <img src="${user.photo}" alt="Profile picture of ${user.name}" class="w-25 rounded-circle me-4">
+        <div class="d-flex flex-column">
+          <h3 class="pb-3">Author</h3>
+          <p>${user.name}</p>
+          <a href="mailto:${user.email}">${user.email}</a>
+        </div>
+      </div>
+        <div id="commentsContainer">
       </div>
     </div>
     <div class="modal-footer">
@@ -99,7 +104,7 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
 function loadComments (comments) {
   let commentHTML = ''
   let commentsContainer = document.getElementById('commentsContainer')
-  commentsContainer.innerHTML = '<h3>comments</h3>'
+  commentsContainer.innerHTML = '<h3 class="py-3">Comments</h3>'
   comments.forEach(comment => {
     commentHTML = `
       <div class="border-bottom mb-3 pb-3">
