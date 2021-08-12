@@ -140,7 +140,7 @@ async function setForm(postId) {
         <label for="bodyName" class="col-form-label">Body:</label>
         <textarea type="text" class="form-control capitalize-text" id="bodyName" name="bodyName" cols="30" rows="10" value="${post.body}">${post.body}</textarea>
       </div>
-      <button type="button" id="editPostBtn" class="btn btn-primary">Edit</button>
+      <button type="button" id="editPostBtn" class="btn btn-dark mt-3">Edit</button>
     </form>
   `
 
