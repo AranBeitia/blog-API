@@ -1,5 +1,6 @@
 const URL = 'http://localhost:3000'
 const modal = document.querySelector('[data-open-modal="myModal"]')
+const postFeed = document.getElementById('postFeed')
 
 function renderPost (start, limit) {
   let cardHTML = ''
@@ -32,12 +33,12 @@ function renderPost (start, limit) {
             </div>
           </div>
         `
-      document.getElementById('postFeed').innerHTML += cardHTML
+      postFeed.innerHTML += cardHTML
     })
   })
 }
 
-document.getElementById('postFeed').addEventListener('click', async (e) => {
+postFeed.addEventListener('click', async (e) => {
   let targetId = e.target.dataset.id
   let targetDelete = e.target.dataset.delete
   let targetEdit = e.target.dataset.edit
@@ -64,7 +65,7 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
         aria-label="Close"
       ></button>
     </div>
-    <img src="https://picsum.photos/id/${post.id}/600/200" alt="Post image" onerror="this.src='https://picsum.photos/id/1/600/200'" class="card-img-top">
+    <img src="https://picsum.photos/id/${post.id+50}/600/200" alt="Post image" onerror="this.src='https://picsum.photos/id/1/600/200'" class="card-img-top">
     <div id="modalBody" class="modal-body">
       <p class="capitalize-text">${post.body}</p>
       <div class="d-flex justify-content-center mx-1 my-2">
@@ -97,9 +98,9 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
     await fetch(`${URL}/posts/${targetDelete}`, {method: 'DELETE'})
       .then(response => response.json())
     let lastId = document.querySelectorAll('[data-id]').length
-    document.getElementById('postFeed').innerHTML = ''
+    postFeed.innerHTML = ''
     renderPost(0, lastId)
-    triggerDeleteToast()
+    triggerToast('liveToastDelete')
   }
 
   if(targetEdit) {
@@ -161,7 +162,7 @@ function editPost(id) {
       body: `${bodyPost}`
     })})
     .then(response => response.json())
-    .then(triggerEditToast)
+    .then(triggerToast('liveToast'))
 }
 
 async function loadOnScroll() {
@@ -176,16 +177,10 @@ async function loadOnScroll() {
   }
 }
 
-function triggerEditToast () {
-  let toastLive = document.getElementById('liveToast')
-  let toast = new bootstrap.Toast(toastLive)
-  toast.show()
-}
-
-function triggerDeleteToast () {
-  let toastLive = document.getElementById('liveToastDelete')
-  let toast = new bootstrap.Toast(toastLive)
-  toast.show()
+function triggerToast(toast) {
+  let toastLive = document.getElementById(toast)
+  let toastElement = new bootstrap.Toast(toastLive)
+  toastElement.show()
 }
 
 async function search (e) {
@@ -194,9 +189,9 @@ async function search (e) {
   let searchValue = document.getElementById('searchValue').value
   window.removeEventListener("scroll", loadOnScroll)
   if(searchValue === '') {
-    document.getElementById('postFeed').innerHTML = ''
+    postFeed.innerHTML = ''
   } else {
-    document.getElementById('postFeed').innerHTML = ''
+    postFeed.innerHTML = ''
     await fetch(`${URL}/posts?q=${searchValue}`)
     .then(response => response.json())
     .then(data => {
@@ -226,7 +221,7 @@ async function search (e) {
             </div>
           </div>
         `
-      document.getElementById('postFeed').innerHTML += cardHTML
+      postFeed.innerHTML += cardHTML
       })
     })
   }
@@ -234,5 +229,4 @@ async function search (e) {
 
 renderPost(0, 9)
 window.addEventListener("scroll", loadOnScroll)
-document.getElementById('searchButton')
-.addEventListener('click', search)
+document.getElementById('searchButton').addEventListener('click', search)

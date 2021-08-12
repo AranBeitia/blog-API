@@ -10,7 +10,13 @@
   background-image:
   linear-gradient(to right,
   rgba(20, 16, 51, 0.4),rgba(40, 73, 219, 0.4)),
-  url('https://picsum.photos/1400/200?random=101');
+  url('https://picsum.photos/1000/600?random=101');
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: bottom;
+  background-attachment: fixed;
+}
+
+.padding-heroe {
+  padding: 15rem 0;
 }
