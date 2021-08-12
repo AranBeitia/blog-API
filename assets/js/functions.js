@@ -99,6 +99,7 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
     let lastId = document.querySelectorAll('[data-id]').length
     document.getElementById('postFeed').innerHTML = ''
     renderPost(0, lastId)
+    triggerDeleteToast()
   }
 
   if(targetEdit) {
@@ -160,7 +161,7 @@ function editPost(id) {
       body: `${bodyPost}`
     })})
     .then(response => response.json())
-    .then(alert(`Post updated: ${titlePost}`))
+    .then(triggerEditToast)
 }
 
 async function loadOnScroll() {
@@ -173,6 +174,18 @@ async function loadOnScroll() {
     let postLength = (await fetch(`${URL}/posts/`).then(response => response.json())).length
       if (lastId < postLength) renderPost(lastId, 6)
   }
+}
+
+function triggerEditToast () {
+  let toastLive = document.getElementById('liveToast')
+  let toast = new bootstrap.Toast(toastLive)
+  toast.show()
+}
+
+function triggerDeleteToast () {
+  let toastLive = document.getElementById('liveToastDelete')
+  let toast = new bootstrap.Toast(toastLive)
+  toast.show()
 }
 
 renderPost(0, 9)
