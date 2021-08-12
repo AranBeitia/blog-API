@@ -63,8 +63,8 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
         data-bs-dismiss="modal"
         aria-label="Close"
       ></button>
-      </div>
-      <img src="https://picsum.photos/id/${post.id}/600/200" alt="Post image" onerror="this.src='https://picsum.photos/id/1/600/200'" class="card-img-top">
+    </div>
+    <img src="https://picsum.photos/id/${post.id}/600/200" alt="Post image" onerror="this.src='https://picsum.photos/id/1/600/200'" class="card-img-top">
     <div id="modalBody" class="modal-body">
       <p class="capitalize-text">${post.body}</p>
       <div class="d-flex justify-content-center mx-1 my-2">
@@ -75,14 +75,19 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
           <a href="mailto:${user.email}">${user.email}</a>
         </div>
       </div>
-        <div id="commentsContainer">
+      <div class="accordion accordion-flush" id="loadComments">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingOne">
+          <button id="commentsBtn" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+          Show comments
+          </button>
+          </h2>
+          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#loadComments">
+          <div id="commentsContainer" class="accordion-body"></div>
+        </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button type="button" id="loadComments" class="btn btn-primary">
-        Load comments
-      </button>
-    </div>
+
     `
     document.getElementById('myModal').innerHTML = modalHTML
     document.getElementById('loadComments').addEventListener('click', () => loadComments(comments))
@@ -102,6 +107,12 @@ document.getElementById('postFeed').addEventListener('click', async (e) => {
 })
 
 function loadComments (comments) {
+  let button = document.getElementById('commentsBtn')
+  if (button.getAttribute('aria-expanded') === "true") {
+    button.innerHTML = "Hide comments"
+  } else {
+    button.innerHTML = "Show comments"
+  }
   let commentHTML = ''
   let commentsContainer = document.getElementById('commentsContainer')
   commentsContainer.innerHTML = '<h3 class="py-3">Comments</h3>'
