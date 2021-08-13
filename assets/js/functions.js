@@ -9,7 +9,7 @@ const postFeed = document.getElementById('postFeed')
 
 /* FUNCTIONALITIES */
 
-function renderPost (start, limit) {
+function renderPost(start, limit) {
   let cardHTML = ''
   return fetch(`${URL}/posts?_start=${start}&_limit=${limit}`)
     .then(response => response.json())
@@ -171,6 +171,8 @@ function editPost(id) {
     })})
     .then(response => response.json())
     .then(triggerToast('liveToast'))
+
+  /* We recharge from beginning till the element we last charged in our scroll */
   let lastId = document.querySelectorAll('[data-id]').length
   postFeed.innerHTML = ''
   renderPost(0, lastId)
